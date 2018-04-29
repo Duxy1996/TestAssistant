@@ -14,8 +14,13 @@
 'use strict';
 
 const express = require('express');
+var bodyParser = require('body-parser');
 
 const app = express();
+app.use(bodyParser.json());
+
+var responseP = {"fulfillmentText": "Carlos, efectivamente sabe programar en ese lenguaje"};
+var responseN = {"fulfillmentText": "Carlos, está actualemtne aprendiendo ese lengauje"};
 
 // [START hello_world]
 // Say hello!
@@ -23,6 +28,18 @@ app.get('/', (req, res) => {
   res.status(200).send('Hello, world!');
 });
 // [END hello_world]
+
+app.post('/', function(request, res) {
+  //console.log(request.body);
+  var lang = request.body.queryResult.parameters.language;
+  console.log(lang[0]);
+  if(lang[0] == "Ruby") {
+    res.send(responseP);
+  }  else {
+    res.send(responseN);
+  }
+
+});
 
 if (module === require.main) {
   // [START server]
