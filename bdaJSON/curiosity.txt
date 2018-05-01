@@ -1,0 +1,5 @@
+{
+  "fisica": ["atom was created in 1996", "Carlos is one of the greatest cs", "Magic is Magic"],
+  "matematicas": ["one plus one is two","two plus three is five"],
+  "arte": ["Leonardo davincci","il poppolo"]
+}

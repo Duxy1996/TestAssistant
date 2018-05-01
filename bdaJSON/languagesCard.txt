@@ -1,0 +1,18 @@
+{
+  "Ruby": {
+    "knowledge": "yes",
+    "url": "http://pngimg.com/uploads/ruby/ruby_PNG29.png"
+  },
+  "Python":{
+    "knowledge": "yes",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/2000px-Python-logo-notext.svg.png"
+  },
+  "Java": {
+    "knowledge": "yes",
+    "url": "https://png.icons8.com/metro/1600/java-coffee-cup-logo.png"
+  },
+  "c++": {
+    "knowledge": "yes",
+    "url": "https://cdn-images-1.medium.com/max/1200/0*AV0ct0V-X8mxXB7S.png"
+  }
+}

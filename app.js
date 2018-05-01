@@ -19,8 +19,51 @@ var bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 
-var responseP = {"fulfillmentText": "Carlos, efectivamente sabe programar en ese lenguaje"};
-var responseN = {"fulfillmentText": "Carlos, está actualemtne aprendiendo ese lengauje"};
+
+// Load resources
+// bda elements
+var languages = [];
+var curiosity     = JSON.parse(fs.readFileSync('bdaJSON/curiosity.txt', 'utf8'));
+var languagesCard = JSON.parse(fs.readFileSync('bdaJSON/languagesCard.txt', 'utf8'));
+for (key in languagesCard) {
+  languages.push(key);
+}
+// Credentials for the https
+var credentials = {key: privateKey, cert: certificate};
+
+// Create a card in the response
+function createCard(title, subtitle, url, text, bttxt) {
+  var card = [
+    {
+      "card": {
+        "title": title,
+        "subtitle": subtitle,
+        "imageUri": url,
+        "buttons": [
+          {
+            "text": text,
+            "postback": bttxt
+          }
+        ]
+      }
+    }
+  ];
+  return card
+}
+
+// Create response with text
+function createResponse(text) {
+  var response = {"fulfillmentText": text};
+  return response;
+}
+// Create response with text and cards
+function createResponseCard(text, card) {
+  response = {"fulfillmentText": text,"fulfillmentMessages": card };
+  return response;
+}
+var card = createCard("hola", "subtitle", "http://pngimg.com/uploads/ruby/ruby_PNG29.png", "text", "http://pngimg.com/uploads/ruby/ruby_PNG29.png")
+var responseP = createResponseCard("Carlos si sabe programar en este lenguaje", card);
+var responseN = createResponse("Carlos no sabe aún programar en este lenguaje");
 
 // [START hello_world]
 // Say hello!
@@ -30,15 +73,26 @@ app.get('/', (req, res) => {
 // [END hello_world]
 
 app.post('/', function(request, res) {
-  //console.log(request.body);
-  var lang = request.body.queryResult.parameters.language;
-  console.log(lang[0]);
-  if(lang[0] == "Ruby") {
-    res.send(responseP);
-  }  else {
-    res.send(responseN);
+  var intentName = request.body.queryResult.intent.displayName;
+  console.log(intentName);
+  if (intentName == "Curiosity") {
+    console.log(request.body.queryResult.parameters.CuriosityCategory);
+    var curiosityLocal = curiosity[request.body.queryResult.parameters.CuriosityCategory][0]
+    var responseC = {"fulfillmentText": curiosityLocal};
+    res.send(responseC);
   }
-
+  else if(intentName == "langaugeCode" ){
+    var lang = request.body.queryResult.parameters.language;
+    console.log(lang[0]);
+    console.log(languagesCard[lang[0]]);
+    if(languages.indexOf(lang[0])>-1) {
+      card = createCard("hola", "subtitle", languagesCard[lang[0]].url, "text", "http://pngimg.com/uploads/ruby/ruby_PNG29.png")
+      responseP = createResponseCard("Carlos si sabe programar en este lenguaje", card);
+      res.send(responseP);
+    }  else {
+      res.send(responseN);
+    }
+  }
 });
 
 if (module === require.main) {
